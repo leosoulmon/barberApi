@@ -1,0 +1,79 @@
+# Windsurf Rules — Baron Barber API
+
+## Project Overview
+Professional barber scheduling REST API built with **FastAPI** and **Clean Architecture**.
+Target audience: senior-level portfolio project demonstrating enterprise Python patterns.
+
+## Tech Stack
+- **Python 3.12+**
+- **FastAPI** — HTTP layer (routes live in `app/infrastructure/routes/`)
+- **SQLModel / SQLAlchemy (async)** — ORM and database models in `app/infrastructure/models.py`
+- **Pydantic v2** — request/response schemas in `app/infrastructure/schemas.py`
+- **Alembic** — database migrations
+- **PostgreSQL** (production) / **aiosqlite** (dev/test)
+- **python-jose + passlib[bcrypt]** — JWT auth and password hashing
+- **pytest + pytest-asyncio + httpx** — testing
+
+## Architecture — Clean Architecture (3 Layers)
+
+### `app/domain/` — Pure business logic, no framework dependencies
+- `entities.py` — Python `@dataclass` domain entities (`User`, `Service`, `AvailabilitySlot`, `TimeOff`, `Appointment`, `AuditLog`) and enums (`UserRole`, `AppointmentStatus`, `WeekDay`)
+- `protocols.py` — Repository contracts defined with `typing.Protocol` (e.g., `UserRepository`, `AppointmentRepository`)
+
+### `app/application/` — Use-case / service layer
+- `services.py` — Orchestrates domain logic; depends only on protocol interfaces, never on infrastructure implementations
+- `exceptions.py` — Domain-specific exceptions raised by services
+
+### `app/infrastructure/` — Framework and persistence details
+- `models.py` — SQLModel DB models
+- `schemas.py` — Pydantic request/response DTOs
+- `mappers.py` — Bidirectional mappers between domain entities and DB models (e.g., `UserMapper.to_domain()`, `UserMapper.to_model()`)
+- `repositories.py` — Concrete async implementations of the domain protocols
+- `database.py` — Async SQLAlchemy engine / session setup
+- `dependencies.py` — FastAPI `Depends()` providers (repo injection, auth, current user)
+- `routes/` — One file per resource (`auth`, `users`, `services`, `availability`, `appointments`, `audit`)
+
+## Coding Conventions
+
+### General
+- All functions and methods must have full **type annotations**
+- All public classes, functions, and modules must have **docstrings**
+- Use `async`/`await` throughout; no synchronous DB calls
+- Import order: stdlib → third-party → local; use absolute imports within the package
+
+### Domain Layer
+- Entities are plain `@dataclass`; no ORM or FastAPI imports allowed here
+- Business rules (e.g., `Appointment.is_overlapping()`, `Appointment.can_cancel()`) belong on the entity
+- Protocols must remain abstract (`...` bodies only)
+
+### Application Layer
+- Services receive repository protocols via constructor injection
+- Services raise exceptions from `application/exceptions.py`, never HTTP exceptions
+- No Pydantic schemas or SQLModel models in this layer
+
+### Infrastructure Layer
+- Routes map Pydantic schemas → domain entities → call service → map result back to response schema
+- Never bypass the service layer from a route; routes are thin adapters
+- Use `Depends()` for all repository and service injection
+- Mappers are stateless static-method classes; add a mapper class whenever a new entity/model pair is introduced
+
+### Naming
+- Domain entities: `PascalCase` dataclasses (e.g., `Appointment`)
+- DB models: `<Entity>Model` suffix (e.g., `AppointmentModel`)
+- Pydantic schemas: `<Entity>Create`, `<Entity>Update`, `<Entity>Response`
+- Mappers: `<Entity>Mapper`
+- Repositories: `<Entity>Repository` (protocol) / `SQLAlchemy<Entity>Repository` or similar (implementation)
+- Routes: plural snake_case file names (`appointments.py`), router prefix `/api/v1/<resource>`
+
+## Testing
+- Unit tests: test domain logic in isolation using `unittest.mock` for repositories
+- Integration tests: use `httpx.AsyncClient` with an in-memory SQLite DB via `aiosqlite`
+- Do **not** delete or weaken existing tests; only add or extend
+- Test files mirror the source tree under a `tests/` directory
+
+## What NOT to Do
+- Do not import FastAPI, SQLAlchemy, or Pydantic inside `app/domain/`
+- Do not put business logic inside routes or repository implementations
+- Do not hardcode secrets; use environment variables
+- Do not use synchronous SQLAlchemy sessions
+- Do not add `print()` statements; use Python's `logging` module

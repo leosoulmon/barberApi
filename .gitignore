@@ -1,5 +1,8 @@
-### Python
-# Byte-compiled files
+# =============================================================================
+# Python
+# =============================================================================
+
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -8,18 +11,32 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.Python
 build/
+develop-eggs/
 dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
 *.egg-info/
+.installed.cfg
 *.egg
+MANIFEST
 
-# dotenv environment variable files
-.env
+# PyInstaller
+*.manifest
+*.spec
 
-# Virtual environments
-.venv
-env/
-venv/
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 htmlcov/
@@ -27,54 +44,184 @@ htmlcov/
 .nox/
 .coverage
 .coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
 .pytest_cache/
+cover/
 
-# Type checkers
-.mypy_cache/
+# Translations
+*.mo
+*.pot
+
+# Django/Flask
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# IPython
+profile_default/
+ipython_config.py
+
 # pyenv
-# .python-version
+.python-version
 
-### Windows
-# Windows thumbnail cache files
-Thumbs.db
+# pipenv
+Pipfile.lock
 
-# Folder config file
-[Dd]esktop.ini
+# UV
+uv.lock
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# poetry
+poetry.lock
+poetry.toml
 
-# Windows shortcuts
-*.lnk
+# pdm
+pdm.lock
+pdm.toml
+.pdm-python
+.pdm-build/
 
-### JetBrains
-# JetBrains IDE directory
+# pixi
+pixi.lock
+.pixi
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Rope
+.ropeproject
+
+# mkdocs
+/site
+
+# Type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Cython
+cython_debug/
+
+# Ruff
+.ruff_cache/
+
+# PyPI
+.pypirc
+
+# Marimo
+marimo/_static/
+marimo/_lsp/
+__marimo__/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Temporary files
+tempCodeRunnerFile.py
+
+
+# =============================================================================
+# IDEs
+# =============================================================================
+
+# JetBrains
 .idea/
-
-# CMake build directories
-cmake-build-*/
-
-# File-based project format
 *.iws
 *.iml
-
-# IntelliJ build output
 out/
+cmake-build-*/
 
-### VS Code
-# VSCode settings (keep shared configuration)
+# VS Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-# Local History for Visual Studio Code
 .history/
-
-# Built Visual Studio Code Extensions
 *.vsix
+
+
+# =============================================================================
+# Operating Systems
+# =============================================================================
+
+# Windows
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.nfs*
+
+
+# =============================================================================
+# Project-Specific (Barber API)
+# =============================================================================
+
+# SQLite dev database
+barber.db
+barber.db-journal
+barber.db-wal
+
+# Redis
+*.rdb
+*.aof
+*.pid
+
+# RabbitMQ
+mnesia/
+rabbitmq/
+rabbitmq-data/
+
+# ActiveMQ
+activemq-data/
